@@ -95,7 +95,12 @@ class Application(tk.Tk):
         self.varG.trace("w", self.change)
         self.varB.trace("w", self.change)
 
-
+        self.frameMem = Frame(self)
+        self.frameMem.pack()
+        for row in range(3):
+            for column in range(7):
+                canvas = Canvas(self.frameMem, width=50, height=50, background="#123456")
+                canvas.grid(row = row, column = column)
 
 
 
