@@ -136,12 +136,13 @@ class Application(tk.Tk):
       
     def canvasColor2Slids(self, canvas):
         color = canvas.cget("background")
-        r = int(color[1:3])
-        g = int(color[3:5])
-        b = int(color[5:])
+        r = int(color[1:3], 16)
+        g = int(color[3:5], 16)
+        b = int(color[5:], 16)
         self.varR.set(r)
         self.varG.set(g)
         self.varB.set(b)
+        self.change()
 
     def quit(self, event=None):
         super().quit()
