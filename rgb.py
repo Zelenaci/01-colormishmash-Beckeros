@@ -1,10 +1,11 @@
-
+#!/usr/bin/env python3
 
 from os.path import basename, splitext
 import tkinter as tk
 from tkinter import Label, Button, Scale, Canvas
 
 from tkinter import HORIZONTAL, LEFT, Frame, Entry, Canvas, S, StringVar, IntVar
+#dominik slehofer
 # from tkinter import ttk
 
 class Application(tk.Tk):
@@ -78,6 +79,7 @@ class Application(tk.Tk):
 
         self.canvasMain=Canvas(width=256, height=100, background="#000000")
         self.canvasMain.pack()
+        self.canvasMain.bind( "<Button-1>", self.mousehandler)
 
         self.varMain=StringVar()
         self.entryMain = Entry(self, textvariable=self.varMain, state="readonly", readonlybackground="#f3f3f3",)
@@ -95,17 +97,30 @@ class Application(tk.Tk):
         self.varG.trace("w", self.change)
         self.varB.trace("w", self.change)
 
-        self.frameMem = Frame(self)
+
+        self.frameMem =  Frame(self)
         self.frameMem.pack()
+        self.canvasMem = []
         for row in range(3):
-            for column in range(7):
-                canvas = Canvas(self.frameMem, width=50, height=50, background="#123456")
-                canvas.grid(row = row, column = column)
+            for column  in range(7):
+                canvas = Canvas(
+                    self.frameMem, width=50, height=50, background="#abcdef"
+                )
+                canvas.grid(row=row, column=column)
+                canvas.bind( "<Button-1>", self.mousehandler)
 
+                self.canvasMem.append(canvas)
 
-
-
-
+    def mousehandler(self, event):
+        #print(dir(event))
+        if self.cget("cursor") != "pencil": #kliknu poprvé
+            self.config(cursor = "pencil")
+            self.color = event.widget.cget("background")
+        elif self.cget("cursor") == "pencil": #kliknu podruhé
+            self.config(cursor="")
+            event.widget.config(background=self.color)
+            if event.widget is self.canvasMain:
+                self.canvasColor2Slids(self.canvasMain)
 
     def change(self, var, index, mode):
         #self.lblG.config(text="ahoj")
@@ -119,7 +134,14 @@ class Application(tk.Tk):
         self.canvasMain.config(background=color)#0 před 2 říká:vyplň prázdné místo nulami, 
         self.varMain.set(color)
       
-
+    def canvasColor2Slids(self, canvas):
+        color = canvas.cget("background")
+        r = int(color[1:3])
+        g = int(color[3:5])
+        b = int(color[5:])
+        self.varR.set(r)
+        self.varG.set(g)
+        self.varB.set(b)
 
     def quit(self, event=None):
         super().quit()
